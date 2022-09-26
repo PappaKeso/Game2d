@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Game2d.iml" filepath="$PROJECT_DIR$/.idea/Game2d.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nome gioco/nome.iml" filepath="$PROJECT_DIR$/nome gioco/nome.iml" />
+    </modules>
+  </component>
+</project>
