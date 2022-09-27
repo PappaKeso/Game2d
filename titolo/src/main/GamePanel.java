@@ -1,16 +1,18 @@
 package main;
 
+import entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable
 {
-    final int originalTileSize = 16;
-    final int scale = 3;
+    final int originalTileSize = 64;
+    final int scale = 1;
 
-    final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 30;//16
-    final int maxScreenRow = 16;//12
+    public final int tileSize = originalTileSize * scale;
+    final int maxScreenCol = 23;//16
+    final int maxScreenRow = 12;//12
     final int screenWidth = tileSize * maxScreenCol;
     final int screenHeight = tileSize * maxScreenRow;
 
@@ -18,10 +20,11 @@ public class GamePanel extends JPanel implements Runnable
     int FPS = 60;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
+    Player player = new Player(this,keyH);
     //set player position
     int playerX=100;
     int playerY=100;
-    int playerSpeed =4;
+    int playerSpeed =8;
 
 
     public GamePanel()
@@ -38,9 +41,24 @@ public class GamePanel extends JPanel implements Runnable
         gameThread.start();
     }
     @Override
-    public void run()
-    {
-        double drawInterval = 1000000000/FPS;//0.01666
+    public void run() {
+        double drawInterval = 1000000000 / FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+
+        while (gameThread != null) {
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            lastTime = currentTime;
+            if (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+            }
+        }
+    }
+      /*  double drawInterval = 1000000000/FPS;//0.01666
         double nextDrawTime = System.nanoTime() + drawInterval;
         while (gameThread != null) {
             this.update();
@@ -61,29 +79,16 @@ public class GamePanel extends JPanel implements Runnable
                 e.printStackTrace();
             }
         }
-    }
+    }*/
     public void update()
     {
-        if(keyH.upPressed == true){
-            playerY-= playerSpeed;
-        }
-        else if (keyH.downPressed == true){
-            playerY += playerSpeed;
-        }
-        else if (keyH.leftPressed == true){
-            playerX -= playerSpeed;
-        }
-        else if (keyH.rightPressed == true){
-            playerX += playerSpeed;
-        }
+    player.update();
     }
-    public void paintComponent(Graphics g)
-        {
-        super.paintComponent(g);
+    public void paintComponent(Graphics g){
 
-        Graphics g2 = (Graphics2D)g;
-        g2.setColor(Color.white);
-        g2.fillRect(playerX,playerY,tileSize,tileSize);
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D)g;
+        player.draw(g2);
         g2.dispose();
     }
 }
